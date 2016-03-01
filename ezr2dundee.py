@@ -5,7 +5,7 @@
 # Current problems: 1. Punctuations are not considered, so always olen == wlen, wdlp == oblp
 #                   2. Corpus cnt files do not contain words, so 'word' is always 'unknown'
 #                   3. Not ready to take Input/Output filenames as arguments in command line
-#                   4. ...
+#                   4. To continue...
 # Version 1. Written by Yunyan Duan, 02/29/2016
 
 import re
