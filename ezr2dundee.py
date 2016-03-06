@@ -3,9 +3,21 @@
 #   simulation_file is a txt file which is directly exported from EZ Reader 'fixation' simulation
 #   cnt_file        is a cnt file, containing word length information of words in each sentence
 #   output_file     is a txt file where you save the dundee-like output
-# Current problems: 1. Punctuations are not considered, so always olen == wlen, wdlp == oblp
-#                   2. Corpus cnt files do not contain words, so 'word' is always 'unknown'
-#                   4. To continue...
+# Logic & assumptions: 1. Currently the corpus is the schilling corpus.
+#                      2. Interpretation of each column of the output:
+#                         ppt:       participant id, = Subject in simulation_file
+#                         text:      = Sentence in simulation_file (schilling corpus has 48 sentences)
+#                         word:      always 'unknown'
+#                         screennum: always 1
+#                         linenum:   always 1
+#                         olen:      always = wlen (punctuation ignored)
+#                         wlen:      calculated from cnt_file. Column 5: 1st word end; Column 6: 2nd word end;... etc. Space count toward the second word.
+#                         xpos:      = FixLoc in simulation_file
+#                         wordnum:   = Word# in simulation_file
+#                         fdur:      = FixDur in simulation_file
+#                         oblp:      always = wdlp (punctuation ignored)
+#                         wdlp:      calculated from simulation FixLoc and cnt word length.
+#                         laun:      calculated from simulation FixLoc. Launch site of the 1st fixation on each sentence is always -99. 
 # Written by Yunyan Duan, 03/06/2016
 
 import re, argparse
