@@ -1,14 +1,20 @@
-# Change the format of EZ Reader 'fixation' output to a format similar to the Dundee corpus
-# Input: EZ Reader 'fixation' simulation
-# Output: Dundee corpus-like fixation data, txt file
-# For current purpose, the corpus used for EZ Reader simulation is 'schilling98Corpus' 
+#       EZR2DUNDEE Change the format of EZ Reader 'fixation' output to a format similar to the Dundee corpus
+# Usage: python ezr2dundee.py <simulation_file> <cnt_file> <output_file> (e.g. python ezr2dundee.py 'SimulationResults.txt' 'schilling.cnt' 'dundee_output.txt') 
+#   simulation_file is a txt file which is directly exported from EZ Reader 'fixation' simulation
+#   cnt_file        is a cnt file, containing word length information of words in each sentence
+#   output_file     is a txt file where you save the dundee-like output
 # Current problems: 1. Punctuations are not considered, so always olen == wlen, wdlp == oblp
 #                   2. Corpus cnt files do not contain words, so 'word' is always 'unknown'
-#                   3. Not ready to take Input/Output filenames as arguments in command line
 #                   4. To continue...
-# Version 1. Written by Yunyan Duan, 02/29/2016
+# Written by Yunyan Duan, 03/06/2016
 
-import re
+import re, argparse
+
+parser = argparse.ArgumentParser(description='make dundee file from ez reader.')
+parser.add_argument('simulation_file', help = 'EZ Reader fixation output txt file')
+parser.add_argument('cnt_file', help = 'cnt file')
+parser.add_argument('output_file', help = 'give a name for the output file')
+args = parser.parse_args()
 
 class Fixation:
     def __init__(self):
@@ -47,35 +53,34 @@ class SimFix:
 
 # Step 1: Read data
 ## Data1: EZ Reader simulation
-filename = 'SimulationResults1_fixs.txt'
-rf = open(filename)
-simfixes = []
+filename = args.simulation_file
 
-for line in rf:
-    if line != '\n' and line[1:7] != 'FixDur':
-        if line[1:9] == 'Sentence':
-            s = filter(None,re.split(':|;|\s|\n',line))
-            sentn = int(s[1])
-            subjn = int(s[3])
-            continue
-        else:
-            fix = SimFix(line.strip().split('\t'))
-            fix.sent = sentn
-            fix.subj = subjn
-        simfixes.append(fix)
-rf.close()
+simfixes = []
+with open(filename) as rf: 
+    for line in rf:
+            if line != '\n' and line[1:7] != 'FixDur':
+                if line[1:9] == 'Sentence':
+                    s = filter(None,re.split(':|;|\s|\n',line))
+                    sentn = int(s[1])
+                    subjn = int(s[3])
+                    continue
+                else:
+                    fix = SimFix(line.strip().split('\t'))
+                    fix.sent = sentn
+                    fix.subj = subjn
+                simfixes.append(fix)
+
 
 ## Data2: corpus cnt file
-cntname = 'schilling.cnt'
-rf = open(cntname)
-sentcnts = []
+cntname = args.cnt_file
 
-for line in rf:
-    sentcnts.append([int(i) for i in line.split()])
-rf.close()
+sentcnts = []
+with open(cntname) as rf:
+    for line in rf:
+        sentcnts.append([int(i) for i in line.split()])
 
 # Step 2: Generate Dundee output
-wf = open("dundee_output.txt",'w')
+wf = open(args.output_file,'w')
 wf.write("ppt text word screennum linenum olen wlen xpos wordnum fdur oblp wdlp laun\n")
 
 for i in range(len(simfixes)):
