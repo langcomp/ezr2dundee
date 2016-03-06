@@ -88,10 +88,10 @@ for i in range(len(simfixes)):
     
     x = Fixation()
     x.ppt = simfixes[i].subj
-    x.text = 1
+    x.text = simfixes[i].sent
     x.word = 'unknown'
     x.screennum = 1
-    x.linenum = simfixes[i].sent
+    x.linenum = 1
     if simfixes[i].WordNum == 0:
         x.olen = sent[4] - sent[3]
         x.wlen = sent[4] - sent[3]
