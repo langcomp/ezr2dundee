@@ -114,7 +114,7 @@ for i in range(len(simfixes)):
         x.olen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 
         x.wlen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 ## minus the space before the word
     x.xpos = simfixes[i].FixLoc
-    x.wordnum = simfixes[i].WordNum
+    x.wordnum = simfixes[i].WordNum + 1
     x.fdur = simfixes[i].FixDur
     if simfixes[i].WordNum == 0:
         x.oblp = simfixes[i].FixLoc
