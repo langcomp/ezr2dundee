@@ -114,7 +114,6 @@ for i in range(len(simfixes)):
         x.olen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 
         x.wlen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 ## minus the space before the word
     x.xpos = simfixes[i].FixLoc
-#    x.wordnum = simfixes[i].WordNum + 1
     x.wordnum = bisect.bisect_left(sent[3:], x.xpos)
     if x.wordnum != simfixes[i].WordNum + 1:
         print 'Warning: wordnum mismatch! subject: {subj}, sentence: {text}, xpos: {xpos}, EZ_Reader wordnum: {ezrwn}, New wordnum: {nwn}.'.format(subj = x.ppt, text = x.text, xpos = x.xpos, ezrwn = (simfixes[i].WordNum + 1), nwn = x.wordnum)
@@ -124,12 +123,12 @@ for i in range(len(simfixes)):
         print 'Warning: fixation out of sentence! subject: {subj}, sentence: {text}, xpos: {xpos}, sentence end: {snd}.\n'.format(subj = x.ppt, text = x.text, xpos = x.xpos, snd = sent[-1])
         x.wordnum = x.wordnum -1
     x.fdur = simfixes[i].FixDur
-    if x.wordnum == 0:
+    if x.wordnum == 1:
         x.oblp = simfixes[i].FixLoc
         x.wdlp = simfixes[i].FixLoc
     else:
-        x.oblp = simfixes[i].FixLoc - sent[x.wordnum + 3] -1
-        x.wdlp = simfixes[i].FixLoc - sent[x.wordnum + 3] -1
+        x.oblp = simfixes[i].FixLoc - sent[x.wordnum + 2] -1
+        x.wdlp = simfixes[i].FixLoc - sent[x.wordnum + 2] -1
     if simfixes[i].FixNum == 1:
         x.laun = -99
     else:
