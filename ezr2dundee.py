@@ -20,7 +20,7 @@
 #                         laun:      calculated from simulation FixLoc. Launch site of the 1st fixation on each sentence is always -99. 
 # Written by Yunyan Duan, 03/06/2016
 
-import re, argparse
+import re, argparse, bisect
 
 parser = argparse.ArgumentParser(description='make dundee file from ez reader.')
 parser.add_argument('simulation_file', help = 'EZ Reader fixation output txt file')
@@ -114,14 +114,21 @@ for i in range(len(simfixes)):
         x.olen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 
         x.wlen = sent[simfixes[i].WordNum + 4] - sent[simfixes[i].WordNum + 3] - 1 ## minus the space before the word
     x.xpos = simfixes[i].FixLoc
-    x.wordnum = simfixes[i].WordNum + 1
+#    x.wordnum = simfixes[i].WordNum + 1
+    x.wordnum = bisect.bisect_left(sent[3:], x.xpos)
+    if x.wordnum != simfixes[i].WordNum + 1:
+        print 'Warning: wordnum mismatch! subject: {subj}, sentence: {text}, xpos: {xpos}, EZ_Reader wordnum: {ezrwn}, New wordnum: {nwn}.\n'.format(subj = x.ppt, text = x.text, xpos = x.xpos, ezrwn = (simfixes[i].WordNum + 1), nwn = x.wordnum)
+        print sent
+    if x.xpos > sent[-1]: ## landing out of the right end of the sentence
+        print 'Warning: fixation out of sentence! subject: {subj}, sentence: {text}, xpos: {xpos}, sentence end: {snd}.\n'.format(subj = x.ppt, text = x.text, xpos = x.xpos, snd = sent[-1])
+        x.wordnum = x.wordnum -1
     x.fdur = simfixes[i].FixDur
-    if simfixes[i].WordNum == 0:
+    if x.wordnum == 0:
         x.oblp = simfixes[i].FixLoc
         x.wdlp = simfixes[i].FixLoc
     else:
-        x.oblp = simfixes[i].FixLoc - sent[simfixes[i].WordNum + 3] -1
-        x.wdlp = simfixes[i].FixLoc - sent[simfixes[i].WordNum + 3] -1
+        x.oblp = simfixes[i].FixLoc - sent[x.wordnum + 3] -1
+        x.wdlp = simfixes[i].FixLoc - sent[x.wordnum + 3] -1
     if simfixes[i].FixNum == 1:
         x.laun = -99
     else:
