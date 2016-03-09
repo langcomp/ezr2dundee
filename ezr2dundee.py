@@ -117,8 +117,9 @@ for i in range(len(simfixes)):
 #    x.wordnum = simfixes[i].WordNum + 1
     x.wordnum = bisect.bisect_left(sent[3:], x.xpos)
     if x.wordnum != simfixes[i].WordNum + 1:
-        print 'Warning: wordnum mismatch! subject: {subj}, sentence: {text}, xpos: {xpos}, EZ_Reader wordnum: {ezrwn}, New wordnum: {nwn}.\n'.format(subj = x.ppt, text = x.text, xpos = x.xpos, ezrwn = (simfixes[i].WordNum + 1), nwn = x.wordnum)
+        print 'Warning: wordnum mismatch! subject: {subj}, sentence: {text}, xpos: {xpos}, EZ_Reader wordnum: {ezrwn}, New wordnum: {nwn}.'.format(subj = x.ppt, text = x.text, xpos = x.xpos, ezrwn = (simfixes[i].WordNum + 1), nwn = x.wordnum)
         print sent
+        print '\n'
     if x.xpos > sent[-1]: ## landing out of the right end of the sentence
         print 'Warning: fixation out of sentence! subject: {subj}, sentence: {text}, xpos: {xpos}, sentence end: {snd}.\n'.format(subj = x.ppt, text = x.text, xpos = x.xpos, snd = sent[-1])
         x.wordnum = x.wordnum -1
